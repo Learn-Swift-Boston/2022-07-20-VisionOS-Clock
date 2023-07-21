@@ -1,0 +1,84 @@
+#usda 1.0
+(
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["Sphere", "_GridMaterial", "_PlainMaterial"]
+    rel material:binding = None (
+        bindMaterialAs = "weakerThanDescendants"
+    )
+
+    def "_PlainMaterial" (
+        active = true
+        prepend references = @_PlainMaterial.usda@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def "clockFaceAgain" (
+        active = true
+        prepend references = @clockFaceAgain.usdz@
+    )
+    {
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (-0.005607374, 0, 0.023248136)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        over "Materials"
+        {
+            over "largerhands"
+            {
+                token outputs:mtlx:surface
+                token outputs:realitykit:vertex
+            }
+
+            over "Face"
+            {
+                token outputs:mtlx:surface
+                token outputs:realitykit:vertex
+
+                over "surfaceShader"
+                {
+                    color3f inputs:diffuseColor = (1, 1, 1) (
+                        colorSpace = "Input - Texture - sRGB - Display P3"
+                    )
+                    color3f inputs:emissiveColor = (0.74683875, 0.74683875, 0.74683875) (
+                        colorSpace = "Input - Texture - sRGB - Display P3"
+                    )
+                    float inputs:roughness = 0.1
+                }
+            }
+
+            over "secondHand"
+            {
+                token outputs:mtlx:surface
+                token outputs:realitykit:vertex
+
+                over "surfaceShader"
+                {
+                    color3f inputs:emissiveColor = (0.8738724, 0, 0.008344589) (
+                        colorSpace = "Input - Texture - sRGB - Display P3"
+                    )
+                }
+            }
+        }
+
+        over "Geom"
+        {
+            over "minuteHand" (
+                customData = {
+                    float3 rotationEulerHint = (0, 0, -1.5707964)
+                }
+            )
+            {
+            }
+        }
+    }
+}
+
