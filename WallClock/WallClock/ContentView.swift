@@ -11,7 +11,7 @@ import RealityKitContent
 import ARKit
 
 let arSession = ARKitSession()
-let sceneReconstruction = SceneReconstructionProvider(modes: [])
+let sceneReconstruction = SceneReconstructionProvider(modes: [.classification])
 
 struct ContentView: View {
 
@@ -110,10 +110,14 @@ struct ContentView: View {
             secondsAngle = -.degrees(Double(seconds * 6))
         }
         .task {
-            do {
-                try await arSession.run([sceneReconstruction])
-            } catch {
-                print(error)
+            print("supported:", SceneReconstructionProvider.isSupported)
+            let result = await arSession.requestAuthorization(for: [.worldSensing])
+            if result[.worldSensing] == .allowed {
+                do {
+                    try await arSession.run([sceneReconstruction])
+                } catch {
+                    print(error)
+                }
             }
         }
     }
